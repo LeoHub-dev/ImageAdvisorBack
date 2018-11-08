@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 
 
 
-Route::group(['prefix' => 'v1', 'namespace' => 'Api'], function() {
+Route::group(['prefix' => 'v1', 'namespace' => 'Api', 'middleware' => 'cors'], function() {
 
 	Route::get('/auth/token', 'AuthController@getAccessToken');
 
@@ -28,13 +28,16 @@ Route::group(['prefix' => 'v1', 'namespace' => 'Api'], function() {
     Route::resource('/categories', 'ListingController@categories');
     Route::resource('/posts', 'PostController', ['only' => ['index', 'show']]);
 
-    Route::group(['middleware' => 'auth:api'], function() {
+    //Route::group(['middleware' => 'auth:api'], function() {
 
     	Route::get('/auth/me', 'AuthController@me');
     	Route::get('/auth/refresh', 'AuthController@refresh');
     	Route::get('/auth/logout', 'AuthController@logout');
 
-	    Route::get('/users', 'UserController@index');
+        //Route::group(['middleware' => ['role:owner']], function () {
+            Route::get('/users', 'UserController@index');
+        //});
+	    
 
-	});
+	//});
 });
