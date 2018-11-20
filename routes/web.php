@@ -17,15 +17,12 @@ Route::get('/', 'HomeController@index');
 
 Route::post('/contact', 'HomeController@contact');
 
-Auth::routes();
 
 Route::group(['prefix' => 'app', 'namespace' => 'App', 'middleware' => ['auth']], function () {
 
     Route::get('/', function() {
         return redirect('/app/dashboard');
     });
-
-    
 
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 

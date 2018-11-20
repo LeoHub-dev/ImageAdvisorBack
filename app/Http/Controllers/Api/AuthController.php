@@ -27,7 +27,11 @@ class AuthController extends Controller
             ])->setStatusCode(401);
         }
 
-        return response()->json($token);
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => Auth::factory()->getTTL() * 60
+        ]);
     }
 
     /**
@@ -47,7 +51,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        Auth::logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }

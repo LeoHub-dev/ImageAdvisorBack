@@ -20,24 +20,22 @@ use Illuminate\Http\Request;
 
 
 
-Route::group(['prefix' => 'v1', 'namespace' => 'Api', 'middleware' => 'cors'], function() {
+Route::group(['prefix' => 'v1', 'namespace' => 'Api'], function() {
 
-	Route::get('/auth/token', 'AuthController@getAccessToken');
+	Route::post('/auth/token', 'AuthController@getAccessToken');
 
-    Route::resource('/tags', 'ListingController@tags');
-    Route::resource('/categories', 'ListingController@categories');
-    Route::resource('/posts', 'PostController', ['only' => ['index', 'show']]);
+    Route::resource('/users', 'UserController', ['only' => ['store']]);
 
-    //Route::group(['middleware' => 'auth:api'], function() {
+    Route::group(['middleware' => 'jwt.auth', 'jwt.refresh'], function() {
 
     	Route::get('/auth/me', 'AuthController@me');
     	Route::get('/auth/refresh', 'AuthController@refresh');
     	Route::get('/auth/logout', 'AuthController@logout');
 
-        //Route::group(['middleware' => ['role:owner']], function () {
-            Route::get('/users', 'UserController@index');
-        //});
+        Route::group(['middleware' => ['role:owner']], function () {
+            Route::resource('/users', 'UserController', ['except' => ['store']]);
+        });
 	    
 
-	//});
+	});
 });
